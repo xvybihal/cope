@@ -17,8 +17,7 @@ my %states = (
 
 sub process {
   mark qr{^Your inventory:|There are screens on:$} => 'underline';
-  line qr{^\s*(\S+?\.)(\S+)\s\((\w+?)\)} => 'yellow', 'yellow bold', \%states;
-
+  line qr{^\s*(\S+?\.)(\S+)\s+(?:\(([^)]+)\)\s+)?\((\w+?)\)} => 'yellow', 'yellow bold', 'yellow', \%states;
 }
 
 run( \&process, real_path, @ARGV );
