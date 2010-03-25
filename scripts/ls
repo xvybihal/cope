@@ -2,17 +2,25 @@
 use App::Cope;
 use App::Cope::Extra qw[user %permissions %filetypes];
 
-my $date_re = qr{
-                  (?:\d{4}-)?     # year
-                  \d{2} - \d{2}   # month-day
-                  \s \d{2}:\d{2}  # hour-minute
-                  (?::\d{2}.\d+\s # iso time thing
-                    \+\d{4})?
-                  \b              # end on a boundary
-              }x;
+# Regex for ISO date formats, such as 03-23 18:07
+my $iso_re = qr{
+		 (?:\d{4}-)?     # year
+		 \d{2} - \d{2}   # month-day
+		 \s \d{2}:\d{2}  # hour-minute
+		 (?::\d{2}.\d+\s # iso time thing
+		   \+\d{4})?
+		 \b              # end on a boundary
+	     }x;
+
+# Regex for common date format, such as Mar 23 18:07
+my $mdt_re = qr{
+		 (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \s+
+		 \d+ \s+
+		 \d\d:\d\d
+	     }x;
 
 sub size {
-  # only files have actual file sizes
+  # Only files have actual file sizes
   if ( /^-/ ) {
     return 'blue bold';
   } else {
@@ -51,7 +59,7 @@ sub process {
          }x => \%filetypes, ( \%permissions ) x 9, 'red',
            \&{ user 'yellow' }, 'yellow', 'magenta bold', 'magenta', \&size, 'blue';
 
-    mark $date_re => 'green';
+    mark qr{$mdt_re|$iso_re} => 'green';
   }
 }
 
