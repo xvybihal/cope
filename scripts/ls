@@ -14,9 +14,9 @@ my $date_re = qr{
 sub size {
   # only files have actual file sizes
   if ( /^-/ ) {
-    return 'green bold';
+    return 'blue bold';
   } else {
-    return 'green';
+    return 'blue';
   }
 }
 
@@ -37,9 +37,19 @@ sub process {
 
   if ($highlighting) {
     my $ts = join '', keys %filetypes;
-    line qr{([-$ts])(.)(.)(.)(.)(.)(.)(.)(.)(.)[ .+]?\s+(\d+)\s+(\S+)\s*(\S*)\s+([0-9,.]+)([BKMGTP]?)\s} =>
-      \%filetypes, ( \%permissions ) x 9, 'red',
-      \&{ user 'yellow' }, 'yellow', \&size, 'green';
+    line qr{^
+             ([-$ts])                    # filetype
+             (.)(.)(.)(.)(.)(.)(.)(.)(.) # permissions (blahg)
+             [ .+]? \s+                  # SELinux indicator
+             (\d+) \s+                   # hard links
+             (\S+) \s*                   # owner
+             (\S*) \s+                   # group
+             (?:
+               (\d+,) \s+ (\d+) |        # device files
+               ([0-9,.]+) ([BKMGTP]?)    # ordinary files
+             )
+         }x => \%filetypes, ( \%permissions ) x 9, 'red',
+           \&{ user 'yellow' }, 'yellow', 'magenta bold', 'magenta', \&size, 'blue';
 
     mark $date_re => 'green';
   }
