@@ -15,8 +15,8 @@ my $iso_re = qr{
 # Regex for common date format, such as Mar 23 18:07
 my $mdt_re = qr{
 		 (?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec) \s+
-		 \d+ \s+
-		 \d\d:\d\d
+		 \d+ \s+	# day
+		 \d\d:?\d\d	# year or time
 	     }x;
 
 sub size {
