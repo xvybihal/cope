@@ -25,7 +25,7 @@ use IO::Handle;
 use Term::ANSIColor;
 use List::MoreUtils qw[each_array firstidx];
 use Env::Path qw[:all];
-use File::Spec qw[splitpath];
+use File::Spec;
 
 use base q[Exporter];
 our @EXPORT = qw[run mark line real_path];
@@ -90,9 +90,17 @@ resulting terminal, and then passes control to L<run_with>.
 
 =cut
 
+# Information about the path that is used quite often
+my ( $vol, $dir, $file ) = File::Spec->splitpath($0);
+my $script_path = File::Spec->catpath( $vol, $dir );
+
 sub run {
   my ( $process, @args ) = @_;
   croak "No arguments" unless @args;
+
+  # Remove ourselves from the $PATH, so other scripts that recurse
+  # like this don't go into an infinite loop
+  PATH->Remove( $script_path );
 
   # Don't run if told not to
   if ( $ENV{NOCOPE} or not POSIX::isatty STDOUT ) {
@@ -333,14 +341,6 @@ the one not in the scripts directory.
 =cut
 
 sub real_path {
-  my ( $vol, $dirs, $file ) = File::Spec->splitpath($0);
-
-  # The program to run is the one in the directory in the $PATH
-  # -after- the one that cope's scripts are in.  This is because if
-  # the first matching directory were used, it would have already been
-  # ran (because it's earlier in the $PATH), and running it again may
-  # cause the two programs to call each other endlessly.
-
   my @dirs  = PATH->Whence($file);
   my $index = firstidx { $_ eq $0 } @dirs;
   my $path  = $dirs[ $index + 1 ]
