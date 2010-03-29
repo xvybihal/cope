@@ -93,6 +93,7 @@ resulting terminal, and then passes control to L<run_with>.
 # Information about the path that is used quite often
 my ( $vol, $dir, $file ) = File::Spec->splitpath($0);
 my $script_path = File::Spec->catpath( $vol, $dir );
+$script_path =~ s{/$}{};
 
 sub run {
   my ( $process, @args ) = @_;
