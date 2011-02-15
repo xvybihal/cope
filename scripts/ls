@@ -48,7 +48,7 @@ sub process {
     line qr{^
              ([-$ts])                    # filetype
              (.)(.)(.)(.)(.)(.)(.)(.)(.) # permissions (blahg)
-             [ .+]? \s+                  # SELinux indicator
+             [ .+@]? \s+                 # SELinux/MacOS ext perm. indicator
              (\d+) \s+                   # hard links
              (\S+) \s*                   # owner
              (\S*) \s+                   # group
