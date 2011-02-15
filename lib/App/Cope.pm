@@ -174,7 +174,7 @@ sub run_with {
   $fh->close  or carp "Failed close: $!";
   $pty->close or carp "Failed close: $!";
 
-  waitpid($pty->{$pid}, 0);
+  waitpid($pty->{pid}, 0);
   return ($? >> 8);
 }
 
