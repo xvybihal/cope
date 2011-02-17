@@ -15,7 +15,7 @@ sub process {
   line qr{^(?:\d+ bytes )?[Ff]rom ([^:\s]+)} => 'blue bold';
 
   # final ping statistics
-  line qr{(\d+% packet loss)} => \&{ percent_b 0, 1, 26 };
+  line qr{(\d+\.?\d*% packet loss)} => \&{ percent_b 0, 1, 26 };
   line qr{min/avg/(?:max/mdev|ewma/max)\s=\s
 	  ([0-9.]+)/    # minimum
 	  ([0-9.]+)/    # average
