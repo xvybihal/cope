@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 use App::Cope;
 
 my @headers = qw[Address Kbytes Mode Offset Device RSS Anon Locked Mode Mapping];

@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 use App::Cope;
 
 my $time_regex = qr{^

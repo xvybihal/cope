@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 use App::Cope;
 use App::Cope::Extra qw[ping_time percent_b];
 use Regexp::Common qw[net];

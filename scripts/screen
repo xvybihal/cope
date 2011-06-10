@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 use App::Cope;
 
 # if we aren't just listing screens, run the program as usual.
