@@ -1,3 +1,5 @@
+#!/bin/bash
+
 sudo apt-get install \
 libenv-path-perl \
 libfile-sharedir-perl \
