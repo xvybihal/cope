@@ -1,1 +1,12 @@
-sudo apt-get install libtest-more-perl libextutils-makemaker-perl libenv-path-perl libfile-sharedir-perl libio-handle-perl libio-pty-perl libio-stty-perl liblist-moreutils-perl libregexp-common-perl libterm-ansicolor-perl
+sudo apt-get install \
+libenv-path-perl \
+libfile-sharedir-perl \
+libio-pty-perl \
+libio-stty-perl \
+liblist-moreutils-perl \
+libregexp-common-perl \
+
+
+#libextutils-makemaker-perl \
+#libio-handle-perl \
+#libterm-ansicolor-perl\
