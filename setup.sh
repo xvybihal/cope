@@ -15,5 +15,7 @@ make \
 #libio-handle-perl \
 #libterm-ansicolor-perl\
 
+perl Makefile.PL
+
 make
 sudo make install
