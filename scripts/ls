@@ -24,7 +24,7 @@ sub size {
   if ( /^-/ ) {
     return 'blue bold';
   } else {
-    return 'blue';
+    return 'blue bold';
   }
 }
 
