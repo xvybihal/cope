@@ -19,3 +19,6 @@ perl Makefile.PL
 
 make
 sudo make install
+
+mkdir -p ~/.bash
+echo "export PATH=$(perl cope_path.pl):\$PATH" >> ~/.bash/cope
