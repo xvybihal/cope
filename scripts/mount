@@ -20,8 +20,8 @@ sub process {
     for my $h (@headers) { mark $h => 'underline'; }
   }
   else {
-    line qr{^([\w-\.]+)} => 'yellow bold';
-    line qr{^([\w/\.-]*/)([\w\.-]+)} => 'yellow','yellow bold';
+    line qr{^([\w\.\-]+)} => 'yellow bold';
+    line qr{^([\w/\.\-]*/)([\w\.-]+)} => 'yellow','yellow bold';
     #line qr{^(\w+) \w+ ([a-zA-Z0-9/]+) \w+ (.*)} => 'magenta bold','red','blue';
     line qr{\s(type )([\w\.-]+)} => '','cyan bold';
     line qr{\s(\(.*\))} => 'blue';
