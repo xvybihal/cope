@@ -22,7 +22,7 @@ sub process {
   else {
     line qr{^([\w\.\-]+)} => 'yellow bold';
     line qr{^([\w/\.\-]*/)([\w\.-]+)} => 'yellow','yellow bold';
-    line qr{\s(LABEL=")([\w\.-]+)(")} => 'red','red bold','red';
+    line qr{\s(LABEL=")([\w\. \-]+)(")} => 'red','red bold','red';
     line qr{\s(UUID=")([\w-]*)(")} => 'cyan','cyan bold','cyan';
     line qr{\s(TYPE=")([\w-]*)(")} => 'green','green bold','green';
   }
