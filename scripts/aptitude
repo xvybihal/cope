@@ -8,12 +8,47 @@ sub process {
 
         line qr{^(Ign)} => 'yellow';
         line qr{^(Hit)} => 'green';
-        line qr{(Get): (\d)(.*) \[(.*)\]} => 'cyan', 'bold', '', 'blue';
+        line qr{(Get): (\d+)(.*) \[(.*)\]} => 'cyan', 'bold', '', 'blue';
         line qr{\d(T)\s} => 'red bold';
 
         # Fetched 7,819 B in 8s (910 B/s)
         line qr{^Fetched ([\d,]+)} => 'blue';
         line qr{in (\d+)s \((.*)\)} => 'yellow', 'blue';
+
+        # The following packages will be upgraded:
+        line qr{(The following packages will be.*):} => 'underline';
+
+        # The following packages will be REMOVED:
+        line qr{The following packages will be (REMOVED):} => 'red bold';
+
+        # The following NEW packages will be installed:
+        line qr{(The following (NEW) packages will be (installed)):} => 'underline', 'green bold', 'green';
+
+        # 1 packages upgraded, 0 newly installed, 0 to remove and 686 not upgraded.
+        line qr{(\d+) packages upgraded} => 'magenta';
+        line qr{(\d+) newly installed}   => 'green';
+        line qr{(\d+) to remove}         => 'red';
+        line qr{and (\d+) not upgraded}  => 'cyan';
+
+        # Do you want to continue? [Y/n/?]
+        line qr{\[([Yy])/([Nn])/(\?)\]}        => 'green', 'red', 'yellow';
+
+        # (Reading database ... 213736 files and directories currently installed.)
+        line qr{(\d+) files and directories}   => 'gray';
+
+        # Current status: 686 updates [-1].
+        line qr{Current status: (\d+) updates} => 'bold';
+
+        # Setting up smplayer (0.8.4-1) ...
+        line qr{Setting up (\w+) \(.*\) ...}   => 'bold', 'blue bold';
+
+        # Preparing to replace smplayer 0.8.3-1 (using .../smplayer_0.8.4-1_amd64.deb) ...
+        line qr{Preparing to replace (\w+) \(.*\) \(using (.*)\) ...} => 'bold', 'blue';
+
+        # Unpacking replacement smplayer ...
+        # Unpacking smplayer (from .../smplayer_0.8.4-1_amd64.deb) ...
+        line qr{Unpacking (|replacement) (\w+)} => 'bold';
+
 }
 
 run( \&process, real_path, @ARGV );
