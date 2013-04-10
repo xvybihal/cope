@@ -1,0 +1,111 @@
+#!/usr/bin/env perl
+use App::Cope;
+$App::Cope::line_buffered = 0;
+
+sub process {
+        # Hit http://apt.puppetlabs.com wheezy/main amd64 Packages
+        # Ign http://security.debian.org testing/updates/contrib Translation-en
+        # Get: 1 http://http.debian.net experimental Release [161 kB]
+
+        line qr{^(Ign)} => 'yellow';
+        line qr{^(Hit)} => 'green';
+        line qr{(Get): (\d+)(.*) \[(.*)\]} => 'cyan', 'bold', '', 'blue';
+        line qr{\d(T)\s} => 'red bold';
+
+        # Fetched 7,819 B in 8s (910 B/s)
+        line qr{^Fetched ([\d,]+)} => 'blue';
+        line qr{in (\d+)s \((.*)\)} => 'yellow', 'blue';
+
+        # The following packages will be upgraded:
+        line qr{(The following packages will be.*):} => 'underline';
+
+        # The following packages will be REMOVED:
+        line qr{The following packages will be (REMOVED):} => 'red bold';
+
+        # The following NEW packages will be installed:
+        line qr{(The following (NEW) packages will be (installed)):} => 'underline', 'green bold', 'green';
+
+        # 1 packages upgraded, 0 newly installed, 0 to remove and 686 not upgraded.
+        line qr{(\d+) packages upgraded} => 'magenta';
+        line qr{(\d+) newly installed}   => 'green';
+        line qr{(\d+) to remove}         => 'red';
+        line qr{and (\d+) not upgraded}  => 'cyan';
+
+        # Do you want to continue? [Y/n/?]
+        line qr{\[([Yy])/([Nn])/(\?)\]}        => 'green', 'red', 'yellow';
+
+        # (Reading database ... 213736 files and directories currently installed.)
+        line qr{(\d+) files and directories}   => 'bold';
+
+        # Current status: 686 updates [-1].
+        line qr{Current status: (\d+) updates} => 'bold';
+
+        # Setting up smplayer (0.8.4-1) ...
+        line qr{Setting up (\w+) \(.*\) ...}   => 'bold', 'blue bold';
+
+        # Preparing to replace smplayer 0.8.3-1 (using .../smplayer_0.8.4-1_amd64.deb) ...
+        line qr{Preparing to replace (\w+) \(.*\) \(using (.*)\) ...} => 'bold', 'blue';
+
+        # Unpacking replacement smplayer ...
+        # Unpacking smplayer (from .../smplayer_0.8.4-1_amd64.deb) ...
+        line qr{Unpacking (|replacement) (\w+)} => 'bold';
+
+# Need to get 1,749 kB of archives. After unpacking 46.1 kB will be used.
+# Get: 1 http://http.debian.net/debian/ experimental/main smplayer amd64 0.8.4-1 [1,749 kB]
+# Fetched 1,749 kB in 0s (2,457 kB/s)
+# Reading changelogs... Done
+# Processing triggers for hicolor-icon-theme ...
+# Processing triggers for menu ...
+# Processing triggers for man-db ...
+# Processing triggers for desktop-file-utils ...
+# Processing triggers for gnome-menus ...
+# Processing triggers for menu ...
+                                         
+
+
+# The following packages will be REMOVED:  
+#   smplayer smplayer-themes{u} smplayer-translations{u} 
+# 0 packages upgraded, 0 newly installed, 3 to remove and 0 not upgraded.
+# Need to get 0 B of archives. After unpacking 14.3 MB will be freed.
+# Do you want to continue? [Y/n/?] 
+# (Reading database ... 213735 files and directories currently installed.)
+# Removing smplayer-themes ...
+# Removing smplayer-translations ...
+# Removing smplayer ...
+# Processing triggers for desktop-file-utils ...
+# Processing triggers for gnome-menus ...
+# Processing triggers for man-db ...
+# Processing triggers for menu ...
+# Processing triggers for hicolor-icon-theme ...
+                                         
+
+
+
+#   The following NEW packages will be installed:
+#   smplayer smplayer-themes{a} smplayer-translations{a} 
+# 0 packages upgraded, 3 newly installed, 0 to remove and 684 not upgraded.
+# Need to get 4,034 kB/5,783 kB of archives. After unpacking 12.4 MB will be used.
+# Do you want to continue? [Y/n/?] 
+# Get: 1 http://http.debian.net/debian/ experimental/main smplayer-themes all 20120919-1 [2,154 kB]
+# Get: 2 http://http.debian.net/debian/ experimental/main smplayer-translations all 0.8.4-1 [1,880 kB]
+# Fetched 4,034 kB in 3s (1,047 kB/s)
+# Selecting previously unselected package smplayer.
+# (Reading database ... 212604 files and directories currently installed.)
+# Unpacking smplayer (from .../smplayer_0.8.4-1_amd64.deb) ...
+# Selecting previously unselected package smplayer-themes.
+# Unpacking smplayer-themes (from .../smplayer-themes_20120919-1_all.deb) ...
+# Selecting previously unselected package smplayer-translations.
+# Unpacking smplayer-translations (from .../smplayer-translations_0.8.4-1_all.deb) ...
+# Processing triggers for hicolor-icon-theme ...
+# Processing triggers for menu ...
+# Processing triggers for man-db ...
+# Processing triggers for desktop-file-utils ...
+# Processing triggers for gnome-menus ...
+# Setting up smplayer (0.8.4-1) ...
+# Setting up smplayer-themes (20120919-1) ...
+# Setting up smplayer-translations (0.8.4-1) ...
+# Processing triggers for menu ...
+
+}
+
+run( \&process, real_path, @ARGV );

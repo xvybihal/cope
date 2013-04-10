@@ -57,17 +57,17 @@ Describes the single-character file type descriptions.
 =cut
 
 our %filetypes = (
-  'b' => 'magenta',    # block special
-  'c' => 'magenta',    # character special
-  'C' => 'red',        # contiguous data
-  'd' => 'blue',       # directory
-  'D' => 'red',        # door
-  'l' => 'cyan',       # symlink
-  'M' => 'red',        # offline file
-  'n' => 'red',        # network special
-  'p' => 'yellow',     # named pipe
-  'P' => 'red',        # port
-  's' => 'yellow',     # socket
+  'b' => 'magenta bold',    # block special
+  'c' => 'magenta bold',    # character special
+  'C' => 'red bold',        # contiguous data
+  'd' => 'blue bold',       # directory
+  'D' => 'red bold',        # door
+  'l' => 'cyan bold',       # symlink
+  'M' => 'red bold',        # offline file
+  'n' => 'red bold',        # network special
+  'p' => 'yellow bold',     # named pipe
+  'P' => 'red bold',        # port
+  's' => 'yellow bold',     # socket
 );
 
 =head1 FUNCTIONS

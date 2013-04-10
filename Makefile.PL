@@ -16,6 +16,7 @@ requires 'IO::Stty';
 requires 'List::MoreUtils';
 requires 'Regexp::Common';
 requires 'Term::ANSIColor';
+requires 'Regexp::IPv6';
 
 # testing
 test_requires 'Test::More';
