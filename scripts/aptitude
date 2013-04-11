@@ -48,12 +48,17 @@ sub process {
 
         # Unpacking replacement smplayer ...
         # Unpacking smplayer (from .../smplayer_0.8.4-1_amd64.deb) ...
-        line qr{Unpacking ([\w|-]+)} => 'blue bold';
+        line qr{Unpacking ([\w|-]+)} => 'blue bold'; # ([\w|-|^replacement]+)} Maybe? matches replacemenet now too...
         line qr{Unpacking replacement ([\w|-]+)} => 'blue bold';
 
         # Removing smplayer-themes ...
         # Removing smplayer ...
+        # TODO fix so it doesn't match: Removing all DKMS Modules
         line qr{(Removing) ([\w|-]+) ...} => 'red bold', 'blue bold';
+
+        # 63% [6 emacs-snapshot-common 8,885 kB/20.5 MB 43%]
+        line qr{(^\d+)\% \[(\d+) ([\w|-]+) (.*) (\d+)\%\]} => 'green bold', 'bold', 'blue bold', 'blue', 'green';
+
 }
 
 run( \&process, real_path, @ARGV );
