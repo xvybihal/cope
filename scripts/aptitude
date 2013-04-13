@@ -117,12 +117,24 @@ sub process {
         # but it is not going to be installed
         line qr{but it is (not) going to be installed} => 'red bold';
 
-
         # Remove the following packages:
         # 1)     skype:i386
         line qr{^(Remove the following packages:)} => 'red bold';
         line qr{^(\d+)\)\s+([\w|-|:]+)} => 'bold', 'blue bold';
 
+        # Package htop:
+        # Package htop:i386:
+        line qr{^(Package) ([\w|-|:]+):} => 'bold', 'blue bold';
+
+        # i   1.0.1-1    testing     990
+        # p   1.0.2-1    experimental      1
+        line qr{^(i)\s+} => 'green bold';
+        line qr{^(p)\s+} => 'red';
+        line qr{^(v)\s+} => 'magenta';
+        line qr{^(c)\s+} => 'yellow';
+        line qr{^(d)\s+} => 'red';
+        line qr{^\w\s(A)\s+} => 'green';
+        line qr{^\w\s+([\d|.\\|-]+)\s+([\w|-|:]+)\s+(\d+)} => 'blue bold', 'yellow', 'red';
 }
 
 run( \&process, real_path, @ARGV );
