@@ -32,7 +32,9 @@ sub process {
         line qr{and (\d+) not upgraded}  => 'cyan';
 
         # Do you want to continue? [Y/n/?]
+        # Accept this solution? [Y/n/q/?]
         line qr{\[([Yy])/([Nn])/(\?)\]}        => 'green', 'red', 'yellow';
+        line qr{\[([Yy])/([Nn])/([Qq])/(\?)\]}        => 'green', 'red', 'magenta', 'yellow';
 
         # (Reading database ... 213736 files and directories currently installed.)
         line qr{(\d+) files and directories}   => 'bold';
@@ -41,7 +43,8 @@ sub process {
         line qr{Current status: (\d+) updates} => 'bold';
 
         # Setting up smplayer (0.8.4-1) ...
-        line qr{(Setting up) ([\w|-]+) \((.*)\) ...}   => 'green', 'blue bold', 'blue';
+        # Setting up libqt4-declarative:amd64 (4:4.8.2+dfsg-11) ...
+        line qr{(Setting up) ([\w|-|:]+) \((.*)\) ...}   => 'green', 'blue bold', 'blue';
 
         # Preparing to replace smplayer 0.8.3-1 (using .../smplayer_0.8.4-1_amd64.deb) ...
         line qr{Preparing to replace ([\w|-]+) \((.*)\) \(using (.*)\) ...} => ' blue bold', 'blue', 'bold';
@@ -59,6 +62,70 @@ sub process {
         # 63% [6 emacs-snapshot-common 8,885 kB/20.5 MB 43%]
         line qr{(^\d+)\% \[(\d+) ([\w|-]+) (.*) (\d+)\%\]} => 'green bold', 'bold', 'blue bold', 'blue', 'green';
 
+        ## aptitude show
+        # Package: zsh-beta
+        line qr{^(Package): ([\w|-|:]+)} => 'bold', 'blue bold';
+
+        # State: not installed
+        # State: installed
+        line qr{^(State): (not installed)} => 'bold', 'red';
+        line qr{^(State): (installed)} => 'bold', 'green';
+
+        # Automatically installed: no
+        line qr{^(Automatically installed): (no)} => 'bold', 'red';
+        line qr{^(Automatically installed): (yes)} => 'bold', 'green';
+
+        # Version: 1.0.1-1
+        line qr{^(Version): (.*)} => 'bold', 'blue';
+
+        # Homepage: http://htop.sourceforge.net
+        line qr{^(Homepage):} => 'bold';
+
+        # Architecture: amd64
+        line qr{^(Architecture):} => 'bold';
+
+        # Section: utils
+        line qr{^(Section):} => 'bold';
+
+        # Conflicts: htop
+        line qr{^(Conflicts):} => 'bold';
+
+        # Suggests: strace, ltrace
+        line qr{^(Suggests):} => 'bold';
+
+        # Description: interactive processes viewer
+        line qr{^(Description):} => 'bold';
+
+        # Depends: libc6 (>= 2.3.4), libncursesw5 (>= 5.6+20070908), libtinfo5
+        line qr{^(Depends):} => 'bold';
+
+        # Maintainer: Eugene V. Lyubimkin <jackyf@debian.org>
+        line qr{^(Maintainer):} => 'bold';
+
+        # Uncompressed Size: 216 k
+        line qr{^(Uncompressed Size):} => 'bold';
+
+        # Priority: optional
+        line qr{^(Priority):} => 'bold';
+
+        # The following packages have unmet dependencies:
+        #  skype:i386 : Depends: libasound2:i386 (>= 1.0.16) but it is not going to be installed.
+        #               Depends: libc6:i386 (>= 2.3.6-6~) but it is not going to be installed.
+        line qr{^ ([\w|-|:]+) : Depends: ([\w|-|:]+) \((.*)\)} => 'blue bold', 'blue bold', 'blue';
+        line qr{^\s+Depends: ([\w|-|:]+) \((.*)\)} => 'blue bold', 'blue';
+
+        # but it is not going to be installed
+        line qr{but it is (not) going to be installed} => 'red bold';
+
+
+        # Remove the following packages:
+        # 1)     skype:i386
+        line qr{^(Remove the following packages:)} => 'red bold';
+        line qr{^(\d+)\)\s+([\w|-|:]+)} => 'bold', 'blue bold';
+
 }
 
 run( \&process, real_path, @ARGV );
+
+
+# Need to get 0 B/45.8 MB of archives. After unpacking 267 MB will be used.
