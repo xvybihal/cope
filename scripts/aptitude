@@ -105,8 +105,20 @@ sub process {
         # Uncompressed Size: 216 k
         line qr{^(Uncompressed Size):} => 'bold';
 
+        # Compressed Size: 74.9 k
+        line qr{^(Compressed Size):} => 'bold';
+
         # Priority: optional
         line qr{^(Priority):} => 'bold';
+
+        # Filename:
+        line qr{^(Filename):} => 'bold';
+
+        # MD5sum:
+        line qr{^(MD5sum):} => 'bold';
+
+        # Archive: now
+        line qr{^(Archive):} => 'bold';
 
         # The following packages have unmet dependencies:
         #  skype:i386 : Depends: libasound2:i386 (>= 1.0.16) but it is not going to be installed.
