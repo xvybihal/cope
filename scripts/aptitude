@@ -146,7 +146,14 @@ sub process {
         line qr{^(c)\s+} => 'yellow';
         line qr{^(d)\s+} => 'red';
         line qr{^\w\s(A)\s+} => 'green';
-        line qr{^\w\s+([\d|.\\|-]+)\s+([\w|-|:]+)\s+(\d+)} => 'blue bold', 'yellow', 'red';
+        line qr{^\w\s+([\d|.\\|-]+)\s+([\w|-|:]+)\s+(\d+)} => 'blue', 'yellow', 'red';
+
+        # Del xulrunner-21.0 21.0~a2+20130315042012-1 [14.5 MB]
+        # Del subversion 1.6.17dfsg-4 [1,315 kB]
+        # Del emacs-snapshot-el 2:20130403-1 [15.1 MB]
+        # Freed 281 MB of disk space
+        line qr{^(Del) (.*) \[(.*)\]} => 'red', 'blue bold', 'blue';
+        line qr{^Freed (.*) of disk space} => 'blue';
 }
 
 run( \&process, real_path, @ARGV );
