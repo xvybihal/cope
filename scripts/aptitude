@@ -2,6 +2,8 @@
 use App::Cope;
 $App::Cope::line_buffered = 0;
 
+my $package = qr/[\w\-:\.]+/;
+
 sub process {
         # Hit http://apt.puppetlabs.com wheezy/main amd64 Packages
         # Ign http://security.debian.org testing/updates/contrib Translation-en
@@ -13,8 +15,9 @@ sub process {
         line qr{\d(T)\s} => 'red bold';
 
         # Fetched 7,819 B in 8s (910 B/s)
-        line qr{^Fetched ([\d,]+)} => 'blue';
-        line qr{in (\d+)s \((.*)\)} => 'yellow', 'blue';
+        # Fetched 43.2 MB in 1min 50s (392 kB/s)
+        line qr{^Fetched ([\d,\.]+)} => 'blue';
+        line qr{in (.*) \((.*)\)} => 'yellow', 'blue';
 
         # The following packages will be upgraded:
         line qr{The following will be (upgraded):} => 'magenta';
@@ -44,27 +47,29 @@ sub process {
 
         # Setting up smplayer (0.8.4-1) ...
         # Setting up libqt4-declarative:amd64 (4:4.8.2+dfsg-11) ...
-        line qr{(Setting up) ([\w|-|:]+) \((.*)\) ...}   => 'green', 'blue bold', 'blue';
+        # Setting up libgupnp-av-1.0-2 (0.10.3-1) ...
+        # Setting up python-brlapi (4.4-9) ...
+        line qr{(Setting up) ($package) \((.*)\) ...}   => 'green', 'blue bold', 'blue';
 
         # Preparing to replace smplayer 0.8.3-1 (using .../smplayer_0.8.4-1_amd64.deb) ...
-        line qr{Preparing to replace ([\w|-]+) \((.*)\) \(using (.*)\) ...} => ' blue bold', 'blue', 'bold';
+        line qr{Preparing to replace ($package) \((.*)\) \(using (.*)\) ...} => ' blue bold', 'blue', 'bold';
 
         # Unpacking replacement smplayer ...
         # Unpacking smplayer (from .../smplayer_0.8.4-1_amd64.deb) ...
-        line qr{Unpacking ([\w|-]+)} => 'blue bold'; # ([\w|-|^replacement]+)} Maybe? matches replacemenet now too...
-        line qr{Unpacking replacement ([\w|-]+)} => 'blue bold';
+        line qr{Unpacking (replacement|) ($package)} => '', 'blue bold';
+        # line qr{Unpacking ($package)} => 'blue bold'; # ([\w|-|^replacement]+)} Maybe? matches replacemenet now too...
 
         # Removing smplayer-themes ...
         # Removing smplayer ...
         # TODO fix so it doesn't match: Removing all DKMS Modules
-        line qr{(Removing) ([\w|-]+) ...} => 'red bold', 'blue bold';
+        line qr{(Removing) ($package) ...} => 'red bold', 'blue bold';
 
         # 63% [6 emacs-snapshot-common 8,885 kB/20.5 MB 43%]
-        line qr{(^\d+)\% \[(\d+) ([\w|-]+) (.*) (\d+)\%\]} => 'green bold', 'bold', 'blue bold', 'blue', 'green';
+        line qr{(^\d+)\% \[(\d+) ($package) (.*) (\d+)\%\]} => 'green bold', 'bold', 'blue bold', 'blue', 'green';
 
         ## aptitude show
         # Package: zsh-beta
-        line qr{^(Package): ([\w|-|:]+)} => 'bold', 'blue bold';
+        line qr{^(Package): ($package)} => 'bold', 'blue bold';
 
         # State: not installed
         # State: installed
@@ -111,11 +116,26 @@ sub process {
         # Priority: optional
         line qr{^(Priority):} => 'bold';
 
+        # New: yes
+        line qr{^(New): (no)} => 'bold', 'red';
+        line qr{^(New): (yes)} => 'bold', 'green';
+
         # Filename:
         line qr{^(Filename):} => 'bold';
 
         # MD5sum:
         line qr{^(MD5sum):} => 'bold';
+
+        # Replaces: virtualbox, virtualbox
+        line qr{^(Replaces):} => 'bold';
+
+        # Provides: virtualbox
+        line qr{^(Provides):} => 'bold';
+        # PreDepends: debconf (>= 1.1) | debconf-2.0
+        line qr{^(PreDepends):} => 'bold';
+
+        # Recommends: libasound2, libpulse0, libsdl-ttf2.0-0, dkms, linux-headers, gcc, make, binutils, pdf-viewer, libgl1, python-central
+        line qr{^(Recommends):} => 'bold';
 
         # Archive: now
         line qr{^(Archive):} => 'bold';
@@ -123,8 +143,8 @@ sub process {
         # The following packages have unmet dependencies:
         #  skype:i386 : Depends: libasound2:i386 (>= 1.0.16) but it is not going to be installed.
         #               Depends: libc6:i386 (>= 2.3.6-6~) but it is not going to be installed.
-        line qr{^ ([\w|-|:]+) : Depends: ([\w|-|:]+) \((.*)\)} => 'blue bold', 'blue bold', 'blue';
-        line qr{^\s+Depends: ([\w|-|:]+) \((.*)\)} => 'blue bold', 'blue';
+        line qr{^ ($package) : Depends: ($package) \((.*)\)} => 'blue bold', 'blue bold', 'blue';
+        line qr{^\s+Depends: ($package) \((.*)\)} => 'blue bold', 'blue';
 
         # but it is not going to be installed
         line qr{but it is (not) going to be installed} => 'red bold';
@@ -132,11 +152,11 @@ sub process {
         # Remove the following packages:
         # 1)     skype:i386
         line qr{^(Remove the following packages:)} => 'red bold';
-        line qr{^(\d+)\)\s+([\w|-|:]+)} => 'bold', 'blue bold';
+        line qr{^(\d+)\)\s+($package)} => 'bold', 'blue bold';
 
         # Package htop:
         # Package htop:i386:
-        line qr{^(Package) ([\w|-|:]+):} => 'bold', 'blue bold';
+        line qr{^(Package) ($package):} => 'bold', 'blue bold';
 
         # i   1.0.1-1    testing     990
         # p   1.0.2-1    experimental      1
@@ -146,7 +166,7 @@ sub process {
         line qr{^(c)\s+} => 'yellow';
         line qr{^(d)\s+} => 'red';
         line qr{^\w\s(A)\s+} => 'green';
-        line qr{^\w\s+([\d|.\\|-]+)\s+([\w|-|:]+)\s+(\d+)} => 'blue', 'yellow', 'red';
+        line qr{^\w\s+([\d|.\\|-]+)\s+($package)\s+(\d+)} => 'blue', 'yellow', 'red';
 
         # Del xulrunner-21.0 21.0~a2+20130315042012-1 [14.5 MB]
         # Del subversion 1.6.17dfsg-4 [1,315 kB]
@@ -154,9 +174,25 @@ sub process {
         # Freed 281 MB of disk space
         line qr{^(Del) (.*) \[(.*)\]} => 'red', 'blue bold', 'blue';
         line qr{^Freed (.*) of disk space} => 'blue';
+
+        # W: Failed to fetch http://http.debian.net/debian/dists/experimental/main/source/SourcesIndex: MD5Sum mismatch
+        # E: Some index files failed to download. They have been ignored, or old ones used instead.
+        line qr{^(W):} => 'yellow';
+        line qr{^(E):} => 'red';
+
+        # Current status: 14 updates [+7], 22543 new [-1233].
+        # Current status: 0 updates [-14].
+        line qr{^(Current status): (\d+) updates \[(.*)\], (\d+) new \[(.*)\]} => 'bold', 'magenta', 'magenta bold', 'green bold', 'green';
+        line qr{^(Current status): (\d+) updates \[(.*)\].} => 'bold', 'magenta', 'magenta bold';
 }
 
 run( \&process, real_path, @ARGV );
 
+# W: Failed to fetch http://http.debian.net/debian/dists/experimental/main/source/SourcesIndex: MD5Sum mismatch
+# W: Failed to fetch http://http.debian.net/debian/dists/experimental/main/binary-i386/PackagesIndex: MD5Sum mismatch
+# E: Some index files failed to download. They have been ignored, or old ones used instead.
+# E: Couldn't rebuild package cache
+
+# Current status: 14 updates [+7], 22543 new [-1233].
 
 # Need to get 0 B/45.8 MB of archives. After unpacking 267 MB will be used.
