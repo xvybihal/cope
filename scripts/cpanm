@@ -22,5 +22,7 @@ sub process {
   # ! Bailing out the installation for Hash-MultiValue-0.13. Retry with --prompt or --force.
   line qr{^(!) (.*)} => 'red bold', '';
 
+  # 31 distributions installed
+  line qr{^(\d+) distributions installed} => 'magenta';
 }
 run( \&process, real_path, @ARGV );
