@@ -108,6 +108,9 @@ sub process {
         # Conflicts: htop
         line qr{^(Conflicts):} => 'bold';
 
+        # Breaks: puppetlabs-release-devel (< 1.0-3), puppetlabs-release-devel (< 1.0-3)
+        line qr{^(Breaks):} => 'bold';
+
         # Suggests: strace, ltrace
         line qr{^(Suggests):} => 'bold';
 
