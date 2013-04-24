@@ -194,17 +194,10 @@ sub process {
 
         # Current status: 14 updates [+7], 22543 new [-1233].
         # Current status: 0 updates [-14].
-        line qr{^(Current status): (\d+) updates \[(.*)\], (\d+) new \[(.*)\]} => 'bold', 'magenta', 'magenta bold', 'green bold', 'green';
-        line qr{^(Current status): (\d+) updates \[(.*)\].} => 'bold', 'magenta', 'magenta bold';
+        line qr{^(Current status): (\d+) update[s] \[(.*)\], (\d+) new \[(.*)\]} => 'bold', 'magenta', 'magenta bold', 'green bold', 'green';
+        line qr{^(Current status): (\d+) update[s] \[(.*)\].} => 'bold', 'magenta', 'magenta bold';
 }
 
 run( \&process, real_path, @ARGV );
-
-# W: Failed to fetch http://http.debian.net/debian/dists/experimental/main/source/SourcesIndex: MD5Sum mismatch
-# W: Failed to fetch http://http.debian.net/debian/dists/experimental/main/binary-i386/PackagesIndex: MD5Sum mismatch
-# E: Some index files failed to download. They have been ignored, or old ones used instead.
-# E: Couldn't rebuild package cache
-
-# Current status: 14 updates [+7], 22543 new [-1233].
 
 # Need to get 0 B/45.8 MB of archives. After unpacking 267 MB will be used.
