@@ -5,6 +5,8 @@ use warnings;
 use 5.010_000;
 use Carp;
 
+no warnings 'experimental';
+
 our $VERSION = '0.99';
 
 =head1 NAME
