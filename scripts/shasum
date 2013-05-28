@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 use App::Cope;
 
 # md5sum and its ilk output hashes. cache the hashes and highlight in

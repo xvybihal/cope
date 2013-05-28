@@ -1,4 +1,4 @@
-#!/usr/bin/env perl
+#!/usr/bin/perl
 use App::Cope qw[run real_path colourise mark line];
 use App::Cope::Extra qw[user nonzero];
 use Term::ANSIColor;
@@ -17,25 +17,25 @@ my $me = (getpwuid( $< ))[0] || "nobody";
 
 my %codes = (
   'D' => 'blue bold',         # sleeping on IO
-  'R' => 'green bold',	      # running
-  'S' => 'cyan bold',	      # sleeping on event
-  'T' => 'red bold',	      # stopped
+  'R' => 'green bold',        # running
+  'S' => 'cyan bold',         # sleeping on event
+  'T' => 'red bold',          # stopped
   'W' => 'magenta bold',      # paging
   'X' => 'white on_red',      # dead
   'Z' => 'white',             # zombie
-  '<' => 'red',		      # not nice
-  'N' => 'green',	      # nice
-  'L' => 'magenta',	      # locked pages into memory
-  's' => 'cyan',	      # session leader
-  'l' => 'yellow',	      # multi-threaded
-  '+' => 'blue',	      # foreground process
+  '<' => 'red',                       # not nice
+  'N' => 'green',             # nice
+  'L' => 'magenta',           # locked pages into memory
+  's' => 'cyan',              # session leader
+  'l' => 'yellow',            # multi-threaded
+  '+' => 'blue',              # foreground process
 );
 
 # Process flags
 
 my %flags = (
-  1 => 'yellow',	      # forked but didn't exec
-  4 => 'red',       	      # used super-user privileges
+  1 => 'yellow',              # forked but didn't exec
+  4 => 'red',                 # used super-user privileges
 );
 
 # pending/blocked/ignored/caught signal mask
@@ -149,17 +149,17 @@ sub process {
       # and colourise each of them in turn.
 
       if ( $word eq '-' ) {
-	$string .= $spaces . colored( $word => 'black bold' );
-	next;
+        $string .= $spaces . colored( $word => 'black bold' );
+        next;
       }
 
       elsif ( $header eq 'COMMAND' or $header eq 'CMD' or $header eq 'STARTED' ) {
-	my $cmd = substr $orig, $-[2];
-	$cmd =~ s{([^\\\s\|_]\S*)}{colored( $1 => 'bold' )}e; # command names
-	$cmd =~ s{(\||\\_)}{colored( $1 => 'green' )}ge;      # forest branches
+        my $cmd = substr $orig, $-[2];
+        $cmd =~ s{([^\\\s\|_]\S*)}{colored( $1 => 'bold' )}e; # command names
+        $cmd =~ s{(\||\\_)}{colored( $1 => 'green' )}ge;      # forest branches
         $string .= $spaces . $cmd;
 
-	# skip the rest of the headers - cmds can go on forever
+        # skip the rest of the headers - cmds can go on forever
         last;
       }
 
