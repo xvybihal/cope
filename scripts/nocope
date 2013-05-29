@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use File::Spec 'splitpath';
 
 my ( $vol, $dirs, $file ) = File::Spec->splitpath($0);

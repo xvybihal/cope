@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use App::Cope;
 $App::Cope::line_buffered = 0;
 

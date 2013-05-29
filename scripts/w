@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use App::Cope;
 use App::Cope::Extra qw[user];
 
