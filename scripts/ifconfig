@@ -6,23 +6,23 @@ use Regexp::Common qw[net];
 my $things = join '|', qw[errors dropped overruns frame carrier collisions];
 
 sub process {
-  line qr{Link encap:(.+?)\s\s} => 'bold';
+  line qr{Link encap(.+?)\s\s} => 'bold';
   mark qr{^(\S+)} => 'bold';
 
   # status
   # green=good, red=bad, yellow=info
   line qr{^\s+(UP|DOWN)} => { UP => 'green bold', DOWN => 'red bold' };
 
-  line qr{((?:$things):)(0)\b}               => 'green',  'green bold';
-  line qr{((?:$things):)([^0]\d*)\b}         => 'red',    'red bold';
-  line qr{([RT]X packets:|txqueuelen:)(\d+)} => 'yellow', 'yellow bold';
-  line qr{([RT]X bytes:)(\d+) (\([^)]+\))}   => 'yellow', 'yellow bold', 'yellow';
+  line qr{($things)\s+(0)\b}               => 'green',  'green bold';
+  line qr{($things)\s+([^0]\d*)\b}         => 'red',    'red bold';
+  line qr{([RT]X packets|txqueuelen)\s*(\d+)} => 'yellow', 'yellow bold';
+  line qr{[RT]X.*?\s+(bytes)\s*(\d+) (\([^)]+\))}   => 'yellow', 'yellow bold', 'yellow';
 
   # addresses and such
-  line qr{HWaddr ([0-9a-fA-F-:]+)}            => 'cyan';
-  line qr{(?:Bcast|Mask):($RE{net}{IPv4})} => 'cyan bold';
-  line qr{inet addr:($RE{net}{IPv4})}      => 'cyan bold underline';
-  line qr{inet6 addr: (\S+)}               => 'cyan';
+  line qr{ether\s*([0-9a-fA-F-:]+)}            => 'cyan';
+  line qr{(?:broadcast|netmask)\s*($RE{net}{IPv4})} => 'cyan bold';
+  line qr{inet\s*($RE{net}{IPv4})}      => 'cyan bold underline';
+  line qr{inet6 (\S+)}               => 'cyan';
 
 }
 
