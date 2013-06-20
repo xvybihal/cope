@@ -16,7 +16,7 @@ sub process {
   line qr{($things)\s+(0)\b}               => 'green',  'green bold';
   line qr{($things)\s+([^0]\d*)\b}         => 'red',    'red bold';
   line qr{[RT]X (packets|txqueuelen)\s*(\d+)} => 'cyan', 'cyan bold';
-  line qr{[RT]X.*?\s+(bytes)\s*(\d+) (\([^)]+\))}   => 'cyan', 'cyan bold', 'yellow bold';
+  line qr{[RT]X.*?\s+(bytes)\s*(\d+) \(([^)]+)\)}   => 'cyan', 'cyan bold', 'yellow bold';
 
   # addresses and such
   line qr{ether\s*([0-9a-fA-F-:]+)}            => 'blue';
