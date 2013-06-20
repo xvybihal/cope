@@ -6,12 +6,11 @@ use Regexp::Common qw[net];
 my $things = join '|', qw[errors dropped overruns frame carrier collisions];
 
 sub process {
-  line qr{Link encap(.+?)\s\s} => 'bold';
   mark qr{^(\S+)} => 'bold';
 
   # status
   # green=good, red=bad, yellow=info
-  line qr{^\s+(UP|DOWN)} => { UP => 'green bold', DOWN => 'red bold' };
+  line qr{(UP|DOWN)} => { UP => 'green bold', DOWN => 'red bold' };
 
   line qr{($things)\s+(0)\b}               => 'green',  'green bold';
   line qr{($things)\s+([^0]\d*)\b}         => 'red',    'red bold';
