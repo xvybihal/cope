@@ -193,7 +193,7 @@ given colour.
 sub mark {
   my ( $regex, $colour ) = @_;
   if ( m/$regex/p ) {
-    colour( $-[0], $+[0] => get( $colour, ${^MATCH} ) );
+    colour( $-[0], $+[0] => get( $colour, substr $_, $-[0], $+[0] - $-[0] ) );
     return 1;
   }
   return 0;
