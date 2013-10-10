@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 use App::Cope;
 
 my @headers = qw[Device Boot Start End Blocks Id System];
