@@ -105,8 +105,8 @@ sub run {
   # like this don't go into an infinite loop
   PATH->Remove( $script_path );
 
-  # Don't run if told not to
-  if ( $ENV{NOCOPE} or not POSIX::isatty STDOUT ) {
+  # Don't run if told not to, and always run if forced to
+  if ( $ENV{NOCOPE} or ( not $ENV{COPE} and not POSIX::isatty STDOUT ) ) {
     exec @args;
   }
   else {
