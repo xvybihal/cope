@@ -35,4 +35,5 @@ And add that to your $PATH.
 
 Special Commands:
 
-    * `nocope`:  Disable all colorization
+    * `nocope` or `NOCOPE=1 ...`:  Disable all colorization
+    * `cope` or `COPE=1 ...`:  Force colorization
