@@ -1,0 +1,12 @@
+#!/usr/bin/env perl
+use App::Cope;
+
+sub process {
+  line qr{^==(\w+)==} => 'bright_yellow';
+  line qr{\(([\w /.]+):(\d+)\)} => 'bold blue', 'yellow';
+  line qr{\(in ([\w /\.\-]+)\)} => 'bold blue';
+  line qr{(at|by)\s+(?:0x[A-Fa-f0-9]+):\s+([^\(]+)\s*\(} => 'bright_green', 'cyan';
+  line qr{(0x[A-Fa-f0-9]+)\b} => 'green';
+}
+
+run( \&process, real_path, @ARGV );
