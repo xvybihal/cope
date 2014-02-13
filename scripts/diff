@@ -1,0 +1,14 @@
+#!/usr/bin/env perl
+use App::Cope;
+
+sub process {
+  line qr{^(---|diff .*)$} => 'bright_white';
+  line qr{^([\-<](?!--$).*)$} => 'red';
+  line qr{^((?:[+>]|\*{3}(?!\*{12}$)).*)$} => 'green';
+  line qr{^(!.*)$} => 'yellow';
+  line qr{^[+\-*]{3} (.*?)\t} => 'bold';
+  line qr{^(@@.*@@|\d+(?:,\d+)?[acd]\d+(?:,\d+)?)} => 'blue';
+  line qr{^(\*{15})$} => 'blue';
+}
+
+run( \&process, real_path, @ARGV );
