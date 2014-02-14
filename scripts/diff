@@ -70,9 +70,9 @@ sub diff_context {
     line qr{^(\*{15})$} => $COLOR_SEP;
     line qr{^(\*{3}\s*)(${RE_RANGE})(\s*\*{4})$} => $COLOR_ADDED, "bold ${COLOR_ADDED}", "clear $COLOR_ADDED";
     line qr{^(\-{3}\s*)(${RE_RANGE})(\s*\-{4})$} => $COLOR_REMOVED, "bold ${COLOR_REMOVED}", "clear $COLOR_REMOVED";
-    line qr{^(\-.*)$} => $COLOR_REMOVED;
-    line qr{^(\+.*)$} => $COLOR_ADDED;
-    line qr{^(\!.*)$} => $COLOR_MODIFIED;
+    line qr{^(\- .*)$} => $COLOR_REMOVED;
+    line qr{^(\+ .*)$} => $COLOR_ADDED;
+    line qr{^(\! .*)$} => $COLOR_MODIFIED;
 }
 
 sub diff_unified {
