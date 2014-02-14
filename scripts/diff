@@ -27,7 +27,7 @@ for (@ARGV) {
     $patch_type = \&diff_unified    if /^--unified|^-(?!-).*?[uU]/;
     $patch_type = \&diff_side       if /^--side-by-side|^-(?!-).*?y/;
 
-    $width = 0 + $1                 if /^--width=(\d+)$/ or /^-(?!-).*?w(\w+)$/;
+    $width = 0 + $1                 if /^--width=(\d+)$/ or /^-(?!-).*?W(\d+)$/;
     if (/^--width$/ && $c < $#ARGV) {
         $width = 0 + $ARGV[$c+1]
     }
