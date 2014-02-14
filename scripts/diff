@@ -105,9 +105,9 @@ sub diff_side {
 
     $char = '' if $c > length($_);
 
-    if ($char eq '>') {
+    if ($char eq '>' || $char eq '(') {
         line qr{^(.*)$} => $COLOR_ADDED;
-    } elsif ($char eq '<') {
+    } elsif ($char eq '<' || $char eq ')') {
         line qr{^(.*)$} => $COLOR_REMOVED;
     } elsif ($char eq '|') {
         line qr{^(.*)$} => $COLOR_MODIFIED;
