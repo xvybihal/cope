@@ -2,6 +2,7 @@
 use App::Cope;
 
 sub process {
+  return unless /^==(\w+)==/; # Only process valgrind's output
   line qr{^==(\w+)==} => 'bright_yellow';
   line qr{\(([\w /.]+):(\d+)\)} => 'bold blue', 'yellow';
   line qr{\(in ([\w /\.\-]+)\)} => 'bold blue';
