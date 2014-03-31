@@ -8,6 +8,7 @@ sub process {
   line qr{^(make:)\s?(\**)\s(.+)} => 'magenta', 'red bold', 'magenta';
   mark qr{^Making .+ in .+} => 'magenta';
   mark qr{Error \d+} => 'red bold';
+  mark qr{(\b(?:[gc]\+\+|[gc]cc)\s+[^|&;]*)\s*(?:$|;|\&|\|)} => 'white';
 
   # extract the program name
   my $line = $_;
