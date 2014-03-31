@@ -126,6 +126,7 @@ should be absolute.
 
 our %colours;                   # the variable to modify
 our $line_buffered = 1;         # keep a buffer of half-lines
+our $color_stack = 0;           # When applying colors, use a stack
 
 sub run_with {
   my ( $process, @args ) = @_;
@@ -292,8 +293,14 @@ from C<$begin> to C<$end> in $colour.
 
 sub colour {
   my ( $begin, $end, $colour ) = @_;
-  $colours{$begin} = $colour;
-  $colours{$end}   = '';
+  return if !$colour;
+  if ($color_stack) {
+      push @{ $colours{$begin}->{push} }, $colour;
+      push @{ $colours{$end}->{pop} }, $colour;
+  } else {
+      $colours{$begin} = $colour;
+      $colours{$end}   = '';
+  }
 }
 
 =head2 colourise
@@ -313,27 +320,68 @@ sub colourise {
   %colours = ();
   &$process;
 
-  my @parts = sort { $b <=> $a } keys %colours;
+  if ($color_stack) {
+    # This will break with overlapping regions
+    my @parts = sort { $a <=> $b } keys %colours;
 
-  # Any colour that's /on_/ or /bold/ needs to be reset afterwards, so
-  # the colours/boldness return to normal values.
+    if (@parts) {
+      my @current_colors = ();
+      my $reset = color("reset");
+      my @string = ();
+      push @string, substr($_, 0, $parts[0]) if $parts[0];
 
-  for my $i ( 0 .. $#parts ) {
-    my ( $last, $part ) = @colours{ @parts[ $i - 1, $i ] };
-    carp "Uninitialised value in colourise (try adding more arguments)"
-      and next unless defined $part;
+      # Build up the colorized string
+      for my $p (0 .. $#parts) {
+        my $i = $parts[$p];
+        while ( $colours{$i}->{pop} and @{$colours{$i}->{pop}} ) {
+          my $col = shift @{$colours{$i}->{pop}};
+          my $c = 0;
+          for my $c (0 .. $#current_colors) {
+            if ($col eq $current_colors[$c]) {
+              splice(@current_colors, $c, 1);
+              last;
+            }
+          }
+        }
+        unshift @current_colors, reverse @{$colours{$i}->{push}} if $colours{$i}->{push};
 
-    if ( $i and ($part =~ m/bold/ and $last !~ m/bold/)
-             or ($part =~ m/on_/  and $last !~ m/_on/ ) ) {
-      $colours{ $parts[ $i - 1 ] } = "clear $last";
+        my $end = ($p == $#parts ? length($_) : $parts[$p+1]);
+        if ($end > $i) {
+          my $col = ($current_colors[0] || "");
+          if ($col) {
+            push @string, color($col);
+          }
+          push @string, substr($_, $i, $end - $i);
+          if ($col) {
+            push @string, $reset;
+          }
+        }
+      }
+      $_ = join("", @string);
     }
-  }
+  } else {
+    my @parts = sort { $b <=> $a } keys %colours;
 
-  # Actually apply the changes and update the string (backwards, as to
-  # not overwrite previous changes)
+    # Any colour that's /on_/ or /bold/ needs to be reset afterwards, so
+    # the colours/boldness return to normal values.
 
-  for my $i ( @parts ) {
-    substr $_, $i, 0, color( $colours{$i} || 'reset' );
+    for my $i ( 0 .. $#parts ) {
+      my ( $last, $part ) = @colours{ @parts[ $i - 1, $i ] };
+      carp "Uninitialised value in colourise (try adding more arguments)"
+        and next unless defined $part;
+
+      if ( $i and ($part =~ m/bold/ and $last !~ m/bold/)
+               or ($part =~ m/on_/  and $last !~ m/_on/ ) ) {
+        $colours{ $parts[ $i - 1 ] } = "clear $last";
+      }
+    }
+
+    # Actually apply the changes and update the string (backwards, as to
+    # not overwrite previous changes)
+
+    for my $i ( @parts ) {
+      substr $_, $i, 0, color( $colours{$i} || 'reset' );
+    }
   }
 
   %colours = ();  # just making sure
