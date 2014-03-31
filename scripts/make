@@ -16,7 +16,7 @@ sub process {
   $line =~ s{^/bin/sh \.\./libtool --mode=\w+\s}{};
 
   do {
-    $_ = $line;
+    local $_ = $line;
     if ( m{^g?cc|g\+\+} ) {
       if ( m{\s-c\s} ) {
 	line qr{\s(-o)\s+(\S+)} => 'blue', 'blue bold'; # object file
