@@ -4,10 +4,10 @@ use App::Cope;
 sub process {
   return unless /^==(\w+)==/; # Only process valgrind's output
   line qr{^==(\w+)==} => 'bright_yellow';
-  line qr{\(([\w /.]+):(\d+)\)} => 'bold blue', 'yellow';
-  line qr{\(in ([\w /\.\-]+)\)} => 'bold blue';
-  line qr{(at|by)\s+(?:0x[A-Fa-f0-9]+):\s+([^\(]+)\s*\(} => 'bright_green', 'cyan';
-  line qr{(0x[A-Fa-f0-9]+)\b} => 'green';
+  line qr{\(([\w /.]+):(\d+)\)} => 'bold green', 'green';
+  line qr{\(in ([\w /\.\-]+)\)} => 'bold green';
+  line qr{(at|by)\s+(?:0x[A-Fa-f0-9]+):\s+([^\(]+)\s*\(} => 'faint blue', 'yellow';
+  line qr{(0x[A-Fa-f0-9]+)\b} => 'bold blue';
 }
 
 run( \&process, real_path, @ARGV );
