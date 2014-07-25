@@ -1,5 +1,6 @@
 #!/usr/bin/env perl
 use App::Cope;
+$App::Cope::line_buffered = 0;
 
 my @headers = qw[Device Boot Start End Blocks Id System];
 
