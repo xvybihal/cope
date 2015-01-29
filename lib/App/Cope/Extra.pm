@@ -118,12 +118,10 @@ sub percent {
   return sub {
     my $pct = shift;
     $pct =~ s/^(\d+).+/$1/;	# extract number
-    given ($pct) {
-      when ( $_ >= $upper  ) { return 'bold' }
-      when ( $_ >= $middle ) { return 'green bold' }
-      when ( $_ >= $lower  ) { return 'yellow bold' }
-      default                { return 'red bold' }
-    }
+       if ( $pct >= $upper  ) { return 'bold' }
+    elsif ( $pct >= $middle ) { return 'green bold' }
+    elsif ( $pct >= $lower  ) { return 'yellow bold' }
+    else                      { return 'red bold' }
   };
 }
 
