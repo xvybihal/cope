@@ -268,20 +268,14 @@ regex. Used by C<mark> and C<line>.
 
 sub get {
   my ( $colour, $str ) = @_;
-  given ( ref $colour ) {
-    when ('ARRAY') {
-      return get( shift @{$colour}, $str ) || '';
-    }
-    when ('HASH') {
-      return get( $colour->{$str}, $str ) || get( $colour->{_else} ) || '';
-    }
-    when ('CODE') {
-      return get( &$colour($str), $str ) || '';
-    }
-    default {
-      return $colour;
-    }
+  if (ref($colour) eq 'ARRAY') {
+    return get( shift @{$colour}, $str ) || '';
+  } elsif (ref($colour) eq 'HASH') {
+    return get( $colour->{$str}, $str ) || get( $colour->{_else} ) || '';
+  } elsif (ref($colour) eq 'CODE') {
+    return get( &$colour($str), $str ) || '';
   }
+  return $colour;
 }
 
 =head2 colour( $begin, $end, $colour )
