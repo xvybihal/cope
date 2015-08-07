@@ -30,3 +30,10 @@ Then, find out where perl put the scripts:
 $ perl cope_path.pl
 
 And add that to your $PATH.
+
+---
+
+Special Commands:
+
+    * `nocope` or `NOCOPE=1 ...`:  Disable all colorization
+    * `cope` or `COPE=1 ...`:  Force colorization

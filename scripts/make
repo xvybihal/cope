@@ -8,6 +8,7 @@ sub process {
   line qr{^(make:)\s?(\**)\s(.+)} => 'magenta', 'red bold', 'magenta';
   mark qr{^Making .+ in .+} => 'magenta';
   mark qr{Error \d+} => 'red bold';
+  mark qr{(?:^|\b)([\w\+\-/]*(?:[gc]\+\+|[gc]cc))(?:\s+|$)} => 'white';
 
   # extract the program name
   my $line = $_;
@@ -15,12 +16,13 @@ sub process {
   $line =~ s{^if\s}{};
   $line =~ s{^/bin/sh \.\./libtool --mode=\w+\s}{};
 
-  given ( $line ) {
-    when ( m{^g?cc|g\+\+} ) {
+  do {
+    local $_ = $line;
+    if ( m{^g?cc|g\+\+} ) {
       if ( m{\s-c\s} ) {
-	line qr{\s(-o)\s+(\S+)} => 'blue', 'blue bold'; # object file
+          line qr{\s(-o)\s+(\S+)} => 'blue', 'blue bold'; # object file
       } else {
-	line qr{\s(-o)\s+(\S+)} => 'blue', 'blue bold underline'; # executable file
+          line qr{\s(-o)\s+(\S+)} => 'blue', 'blue bold underline'; # executable file
       }
     }
   }

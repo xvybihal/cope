@@ -58,11 +58,12 @@ sub cpu {
 
 sub nice {
   mark qr{\S+} => sub {
-    given (shift) {
-      when ( $_ > 10  ) { return 'green bold' }
-      when ( $_ > 0   ) { return 'green' }
-      when ( $_ < 0   ) { return 'red' }
-      when ( $_ < -10 ) { return 'red bold' }
+    do {
+      $_ = shift;
+      if ( $_ > 10  ) { return 'green bold' }
+      if ( $_ > 0   ) { return 'green' }
+      if ( $_ < 0   ) { return 'red' }
+      if ( $_ < -10 ) { return 'red bold' }
     }
   };
 }
