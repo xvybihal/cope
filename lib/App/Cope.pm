@@ -3,6 +3,7 @@ package App::Cope;
 use strict;
 use warnings;
 use 5.010_000;
+no if $] >= 5.018, warnings => "experimental";
 use Carp;
 
 no warnings 'experimental';
