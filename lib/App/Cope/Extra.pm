@@ -5,8 +5,6 @@ use warnings;
 no if $] >= 5.018, warnings => "experimental";
 use 5.010_000;
 
-no warnings 'experimental';
-
 =head1 NAME
 
 App::Cope::Extra - Pre-defined highlighting syntax for common patterns
