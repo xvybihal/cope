@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use Test::More;
 
-my @files = <scripts/*>;
+my @files = <share/*>;
 plan tests => scalar @files;
 
 for my $file (@files) {

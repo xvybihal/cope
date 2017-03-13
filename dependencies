@@ -1,9 +1,0 @@
-libenv-path-perl
-libfile-sharedir-perl
-libio-pty-perl
-libio-stty-perl
-liblist-moreutils-perl
-libregexp-common-perl
-libregexp-ipv6-perl
-libc6-dev
-make
