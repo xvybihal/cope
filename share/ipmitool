@@ -1,0 +1,13 @@
+#!/usr/bin/env perl
+use App::Cope;
+
+# these colours have only been tested with 'ipmitool lan print 1'
+
+sub process {
+  line qr{(IP Address Source)\s*?:\s*(.+)}      => 'bold', 'bold';
+  line qr{(IP Address)\s*?:\s*(.+)}             => 'cyan', 'cyan bold';
+  line qr{(Subnet Mask)\s*?:\s*(.+)}            => 'blue', 'blue bold';
+  line qr{(Default Gateway IP)\s*?:\s*(.+)}     => 'green', 'green bold';
+}
+
+run( \&process, real_path, @ARGV );

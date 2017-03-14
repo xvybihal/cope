@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+use App::Cope;
+
+my $runlevel = `runlevel | grep -Po '\\d'`;
+chomp($runlevel);
+
+sub process {
+	line qr{^([^ ]+)}               => 'bold';
+
+	line qr{\b([0-6]):(on|off)\b}   => 'blue';
+	line qr{\b[0-6]:(on)\b}         => 'green';
+	line qr{\b[0-6]:(off)\b}        => 'red';
+	line qr{\b($runlevel):(on)\b}   => 'blue bold underline', 'green bold underline';
+	line qr{\b($runlevel):(off)\b}  => 'blue bold underline', 'red bold underline';
+}
+
+run( \&process, real_path, @ARGV );

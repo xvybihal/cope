@@ -1,0 +1,21 @@
+#!/usr/bin/env perl
+use App::Cope;
+
+sub process {
+	line qr{^\s*([^:]+):}    => 'bold';
+	line qr{(Reason):}       => 'bold';
+
+	line qr{\b(\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2})}    => 'blue bold';
+
+	line qr{(loaded)}                      => 'green';
+	line qr{(enabled)}                     => 'green bold';
+	line qr{(vendor preset): (disabled)}   => 'bold', 'red bold';
+
+	line qr{(code)=(exited)}        => 'bold', 'red bold';
+	line qr{(status)=(0/SUCCESS)}   => 'bold', 'green bold';
+
+	line qr{(inactive|not-found)}               => 'red';
+	line qr{(dead|No such file or directory)}   => 'red bold';
+}
+
+run( \&process, real_path, @ARGV );

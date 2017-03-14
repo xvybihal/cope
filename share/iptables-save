@@ -1,0 +1,34 @@
+#!/usr/bin/env perl
+use App::Cope;
+
+sub process {
+	line qr{^(\*.*)} => 'bold underline';
+	line qr{^(\s*#.*)} => 'yellow bold';
+
+	# chains
+	line qr{(INCOMING\w*)} => 'green';
+	line qr{(INPUT\w*)}    => 'green';
+	line qr{(OUTGOING\w*)} => 'red';
+	line qr{(OUTPUT\w*)}   => 'red';
+	line qr{(FORWARD\w*)}  => 'yellow';
+
+	# actions
+	line qr{(ACCEPT\w*)} => 'green bold underline';
+	line qr{(REJECT\w*)} => 'red bold underline';
+	line qr{(DROP\w*)}   => 'magenta bold underline';
+	line qr{(MARK\w*)}   => 'cyan bold underline';
+
+	# input
+	line qr{-i\s+([\w\.]+)} => 'blue bold';
+	line qr{-s\s+([\w\.]+)(/\d+)?} => 'blue bold', 'blue';
+	line qr{--sport\s+([\w\.]+)} => 'blue bold';
+	line qr{(PREROUTING)} => 'blue';
+
+	# output
+	line qr{-o\s+([\w\.]+)} => 'cyan bold';
+	line qr{-d\s+([\w\.]+)(/\d+)?} => 'cyan bold', 'cyan';
+	line qr{--dport\s+([\w\.]+)} => 'cyan bold';
+	line qr{(POSTROUTING)} => 'cyan';
+}
+
+run( \&process, real_path, @ARGV );

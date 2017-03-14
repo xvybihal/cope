@@ -1,0 +1,38 @@
+#!/usr/bin/env perl
+use App::Cope;
+
+sub process {
+	# header
+	mark qr{^ID#.*} => 'reverse';
+
+	# from https://en.wikipedia.org/wiki/S.M.A.R.T.#Known_ATA_S.M.A.R.T._attributes
+
+	# too hard to do in one line!
+	#mark qr{^\s*0*(5|10|184|188|196|197|198|201|230)\b.*} => 'bold';
+	#line qr{^\s*0*(5|10|184|188|196|197|198|201|230)\b.*\b([^1])$} => 'bold', 'green', 'red bold';
+
+	line qr{^(\s*0*5\b.*)\b(\d+)$}   => 'bold underline yellow', 'bold underline red';   # 05 0x05 Reallocated Sectors Count
+	line qr{^(\s*0*10\b.*)\b(\d+)$}  => 'bold underline yellow', 'bold underline red';   # 10 0x0A Spin Retry Count
+	line qr{^(\s*0*184\b.*)\b(\d+)$} => 'bold underline yellow', 'bold underline red';   # 184 0xB8 End-to-End error / IOEDC
+	line qr{^(\s*0*188\b.*)\b(\d+)$} => 'bold underline yellow', 'bold underline red';   # 188 0xBC Command Timeout
+	line qr{^(\s*0*196\b.*)\b(\d+)$} => 'bold underline yellow', 'bold underline red';   # 196 0xC4 Reallocation Event Count
+	line qr{^(\s*0*197\b.*)\b(\d+)$} => 'bold underline yellow', 'bold underline red';   # 197 0xC5 Current Pending Sector Count
+	line qr{^(\s*0*198\b.*)\b(\d+)$} => 'bold underline yellow', 'bold underline red';   # 198 0xC6 Uncorrectable Sector Count or Offline Uncorrectable or Off-Line Scan Uncorrectable Sector Count
+	line qr{^(\s*0*199\b.*)\b(\d+)$} => 'bold underline yellow', 'bold underline red';   # 199 0x3e UDMA_CRC_Error_Count
+	line qr{^(\s*0*201\b.*)\b(\d+)$} => 'bold underline yellow', 'bold underline red';   # 201 0xC9 Soft Read Error Rate or TA Counter Detected
+	line qr{^(\s*0*230\b.*)\b(\d+)$} => 'bold underline yellow', 'bold underline red';   # 230 0xE6 Drive Life Protection Status
+
+	line qr{^(\s*0*5\b.*)\b(0)$}       => 'bold underline yellow', 'bold underline green'; # 05 0x05 Reallocated Sectors Count
+	line qr{^(\s*0*10\b.*)\b(0)$}      => 'bold underline yellow', 'bold underline green'; # 10 0x0A Spin Retry Count
+	line qr{^(\s*0*184\b.*)\b(0)$}     => 'bold underline yellow', 'bold underline green'; # 184 0xB8 End-to-End error / IOEDC
+	line qr{^(\s*0*187\b.*)\b(0)$}     => 'bold underline yellow', 'bold underline green'; # 188 0xBB Reported Uncorrectable Errors
+	line qr{^(\s*0*188\b.*)\b(0)$}     => 'bold underline yellow', 'bold underline green'; # 188 0xBC Command Timeout
+	line qr{^(\s*0*196\b.*)\b(0)$}     => 'bold underline yellow', 'bold underline green'; # 196 0xC4 Reallocation Event Count
+	line qr{^(\s*0*197\b.*)\b(0)$}     => 'bold underline yellow', 'bold underline green'; # 197 0xC5 Current Pending Sector Count
+	line qr{^(\s*0*198\b.*)\b(0)$}     => 'bold underline yellow', 'bold underline green'; # 198 0xC6 Uncorrectable Sector Count or Offline Uncorrectable or Off-Line Scan Uncorrectable Sector Count
+	line qr{^(\s*0*199\b.*)\b(0)$}     => 'bold underline yellow', 'bold underline green'; # 199 0x3e UDMA_CRC_Error_Count
+	line qr{^(\s*0*201\b.*)\b(0)$}     => 'bold underline yellow', 'bold underline green'; # 201 0xC9 Soft Read Error Rate or TA Counter Detected
+	line qr{^(\s*0*230\b.*)\b(0)$}     => 'bold underline yellow', 'bold underline green'; # 230 0xE6 Drive Life Protection Status
+}
+
+run( \&process, real_path, @ARGV );

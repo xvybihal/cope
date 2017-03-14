@@ -1,0 +1,37 @@
+#!/usr/bin/env perl
+use App::Cope;
+
+sub process {
+	line qr{^Chain (.+) \(}               => 'yellow bold underline';
+
+	line qr{\b(INPUT)\b}               => 'green';
+	line qr{\b(FORWARD)\b}               => 'yellow';
+	line qr{\b(OUTPUT)\b}               => 'red';
+	line qr{\b(PREROUTING)\b}               => 'blue';
+	line qr{\b(POSTROUTING)\b}               => 'cyan';
+
+	line qr{\b(ACCEPT.*?)\b}               => 'green bold';
+	line qr{\b(DROP.*?)\b}               => 'magenta bold';
+	line qr{\b(REJECT.*?)\b}               => 'red bold';
+	line qr{\b(LOG.*?)\b}               => 'cyan bold';
+	line qr{\b(RETURN.*?)\b}               => 'bold';
+
+	line qr{\b(reject.*?)\s}               => 'red bold';
+
+	line qr{\b(\d+\.\d+\.\d+\.\d+)(\/\d+)?\s+(\d+\.\d+\.\d+\.\d+)(\/\d+)?\b}               => 'blue bold', 'blue', 'cyan bold', 'cyan';
+
+	line qr{^(\s*pkts\s+bytes.*)}               => 'bold';
+	line qr{^(\s*num\s+pkts\s+bytes.*)}               => 'bold';
+
+	line qr{\b(spt):(\d+)\b}               => 'blue', 'blue bold';
+	line qr{\b(sports)\s+([\d,]+)\b}               => 'blue', 'blue bold';
+	line qr{\b(dpt):(\d+)\b}               => 'cyan', 'cyan bold';
+	line qr{\b(dports)\s+([\d,]+)\b}               => 'cyan', 'cyan bold';
+
+	line qr{\s(tcp)\s}               => 'yellow';
+	line qr{\s(udp)\s}               => 'magenta';
+	line qr{\s(icmp)\s}               => 'cyan';
+	line qr{\s(all)\s}               => 'blue';
+}
+
+run( \&process, real_path, @ARGV );

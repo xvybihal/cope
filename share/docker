@@ -1,0 +1,50 @@
+#!/usr/bin/env perl
+use App::Cope;
+use Regexp::Common qw[net];
+
+# don't process pipeline if running a container or a command inside a container
+{
+	no warnings 'uninitialized';
+	if ($ARGV[0] =~ /^(exec|run)$/) {
+		exec real_path, @ARGV;
+	}
+}
+
+sub process {
+	# header
+	line qr{^(CONTAINER ID.*)} => 'yellow bold underline';
+
+	# status
+	line qr{(.*\bExited .*? seconds? ago\b.*)} => 'magenta bold reverse';
+	line qr{(.*\bExited .*? minutes? ago\b.*)} => 'magenta bold reverse';
+	line qr{(.*\bExited .*? hours? ago\b.*)} => 'magenta reverse';
+	line qr{(.*\bExited .*? days? ago\b.*)} => 'magenta bold';
+	line qr{(.*\bExited .*? weeks? ago\b.*)} => 'magenta';
+	line qr{(.*\bExited .*? years? ago\b.*)} => 'magenta';
+	line qr{(\bUp .*? seconds?\b)} => 'green bold reverse';
+	line qr{(\bUp .*? minutes?\b)} => 'green bold reverse';
+	line qr{(\bUp .*? hours?\b)} => 'green reverse';
+	line qr{(\bUp .*? days?\b)} => 'green bold';
+	line qr{(\bUp .*? weeks?\b)} => 'green';
+	line qr{(\bUp .*? years?\b)} => 'green';
+	line qr{(\bRestarting .* ago?\b)} => 'red reverse';
+
+	# ports
+	line qr{(\b\d\.\d\.\d\.\d)(?=:)} => 'blue';
+	line qr{(?<=:)(\d+)} => 'blue bold';
+	line qr{(\d+)(?=/tcp)} => 'cyan bold';
+	line qr{(\d+)(?=/udp)} => 'cyan bold';
+
+	line qr{(\S+)$} => 'bold';
+
+	# stats
+	line qr{(\b\d\.\d+)%} => 'green bold';
+	line qr{(\b\d\d\.\d+)%} => 'green';
+	line qr{(\b6\d\.\d+)%} => 'yellow bold';
+	line qr{(\b7\d\.\d+)%} => 'yellow';
+	line qr{(\b8\d\.\d+)%} => 'red';
+	line qr{(\b9\d\.\d+)%} => 'red bold';
+	line qr{(\b\d\d\d\.\d+)%} => 'red bold';
+}
+
+run( \&process, real_path, @ARGV );

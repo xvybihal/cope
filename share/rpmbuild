@@ -1,0 +1,16 @@
+#!/usr/bin/env perl
+use App::Cope;
+
+sub process {
+	line qr{^([A-Z][^:]+)\(([^:]+)\):(.*)}   => 'cyan', 'cyan bold', 'bold';
+	line qr{^([A-Z][^:]+):(.*)}   => 'cyan', 'bold';
+	line qr{^(Wrote:) (.*)}    => 'green', 'green bold';
+	line qr{^(\++)(.*)}    => 'blue bold', 'blue';
+
+	line qr{^(make[^:]*):(.*Error.*)}    => 'red', 'red bold';
+
+	line qr{^(RPM build errors:)}    => 'red';
+	line qr{^(.*Bad exit status from.*)}    => 'red bold';
+}
+
+run( \&process, real_path, @ARGV );

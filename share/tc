@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+use App::Cope;
+
+sub process {
+
+  line qr{(qdisc) (\w+) (\d+:) (\w+) \w+ \d+ \w+ \d+ (priomap|default) ([\d ]+)} => 'yellow bold', 'cyan', 'cyan bold', 'yellow bold', 'magenta', 'magenta bold';
+  line qr{(qdisc) (\w+) (\d+:) (\w+) (\d+:\d+)} => 'magenta bold', 'cyan', 'cyan bold', 'cyan', 'cyan bold';
+  line qr{(Sent|rate)} => 'bold';
+  line qr{(\d+) (bytes|pkt)} => 'blue bold', 'blue';
+  line qr{(dropped|overlimits|requeues) (\d+)} => 'red', 'red bold', 'red', 'red bold', 'red', 'red bold';
+  line qr{(dropped|overlimits|requeues) (0)}   => 'green', 'green bold', 'green', 'green bold', 'green', 'green bold';
+  line qr{(backlog) (\d+b \d+p)} => 'red', 'red bold';
+  line qr{(backlog) (0b 0p)}     => 'green', 'green bold';
+
+}
+
+run( \&process, real_path, @ARGV );

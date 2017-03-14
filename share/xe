@@ -1,0 +1,19 @@
+#!/usr/bin/env perl
+use App::Cope;
+
+sub process {
+	line qr{^.*?:(.*)}				=> 'bold';
+	line qr{(true)}					=> 'green bold';
+	line qr{(false)}				=> 'red bold';
+	line qr{(running)}				=> 'green bold';
+	line qr{(halted)}				=> 'red bold';
+	line qr{([\w-]+uuids?)}			=> 'yellow bold';
+	line qr{(uuids?)}				=> 'yellow bold';
+	line qr{([\w-]+name-label)}		=> 'yellow bold';
+	line qr{(name-label)}			=> 'yellow bold';
+	line qr{(\(.RO\))}				=> 'blue';
+	line qr{(\(.RW\))}				=> 'blue bold';
+	line qr{(\w+-\w+-\w+-\w+-\w+)}	=> 'cyan bold';
+}
+
+run( \&process, real_path, @ARGV );

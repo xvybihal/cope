@@ -1,0 +1,17 @@
+#!/usr/bin/env perl
+use App::Cope;
+
+sub process {
+	line qr{(Personalities|unused devices)} => 'bold';	# headings
+	line qr{([ms]d[a-z]?)(\d+)} => 'blue bold', 'blue';	# devices
+	line qr{\[([_U]+)\]} => 'red';						# some raid members failed
+	line qr{\[(U+)\]} => 'green bold';					# all raid members ok
+	line qr{\[(=*>)(\.*)\]} => 'yellow bold', 'red';	# rebuilding progress bar
+	line qr{(active)} => 'green bold';					# good things
+	line qr{(raid)(\d+)} => 'cyan', 'cyan bold';		# raid type
+	line qr{super ([\d\.]+)} => 'yellow bold';			# metadata version
+	line qr{(recovery) = ([\d\.]+)(%)} => 'magenta', 'magenta bold', 'magenta';	# rebuilding progress
+	line qr{(finish|speed)=([\d\.]+)(min|K/sec)} => 'magenta', 'magenta bold', 'magenta';	# rebuilding stats
+}
+
+run( \&process, '/bin/cat', '/proc/mdstat');
