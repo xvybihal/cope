@@ -8,7 +8,7 @@ my @headers = (
   'Inodes', 'IUsed', 'IFree', 'IUse%', # -i
 );
 
-my $system_fs = join '|', qw[none tmpfs udev proc devpts sysfs procbususb rpc_pipefs];
+my $system_fs = join '|', qw[none tmpfs devtmpfs dev udev proc devpts sysfs procbususb rpc_pipefs run unionfs];
 
 sub process {
   if (/^Filesystem/) {
@@ -19,9 +19,11 @@ sub process {
 
     # filesystems
     mark qr{^(?:$system_fs)\b} => 'magenta'
-      or line qr{(?:^|:)(\S+/)(\S+)} => 'blue', 'blue bold'
+      or line qr{(?:^|:|;)([^\s;]+/)([^\s;]+)} => 'blue', 'blue bold' # also matches multiple fuse devs: /mnt/d1;/mnt/d2;/mnt/d3 ...
       or line qr{(\S+:)(\S*)} => 'blue', 'blue bold'
       or line qr{^(automount\()(\S+)(\))} => 'red', 'magenta', 'red';
+
+    line qr{^(?:$system_fs)\b} or line qr{(?:\s+)(\S+/)(\S+)$} => 'cyan', 'cyan bold';
   }
 }
 
