@@ -1,7 +1,7 @@
 #!/usr/bin/env perl
 use App::Cope;
 
-no warnings 'experimental';
+no if $] >= 5.018, warnings => 'experimental';
 
 my $patch_type = \&diff_normal;
 
