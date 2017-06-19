@@ -1,5 +1,5 @@
 Name:           perl-App-Cope
-Version:        0.99
+Version:        1.00
 Release:        1%{?dist}
 Summary:        App::Cope Perl module
 License:        Non-distributable, see LICENSE
@@ -62,5 +62,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_usr}/bin/*
 
 %changelog
+* Mon Jun 19 2017 Rick Hansen <nichivo@goemail.xyz> 1.00-1
+- Milestone release
+
 * Fri Mar 10 2017 Rick Hansen <nichivo@goemail.xyz> 0.99-1
 - Initial release
