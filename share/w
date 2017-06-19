@@ -22,6 +22,11 @@ sub process {
     line qr{^\w+\s+(pts)(/\d+)}      => 'green',   'green bold';
     line qr{^\w+\s+(ttys?|p|s)(\d+)} => 'magenta', 'magenta bold';
 
+    line qr{^\S+ +\S+ +\S+ +\S+ +\b(\d+\.\d+s)\b}     => 'green bold';
+    line qr{^\S+ +\S+ +\S+ +\S+ +\b(\d+:\d+m)\b}      => 'yellow bold';
+    line qr{^\S+ +\S+ +\S+ +\S+ +\b(\d+:\d+)\b}       => 'magenta bold';
+    line qr{^\S+ +\S+ +\S+ +\S+ +\b(\d+days)\b}       => 'red bold';
+
     line qr{^\w+\s+\S+\s+(\S+)} => 'cyan'      if $using_from;
     line qr{.{$what_pos}(.+)}   => 'cyan bold' if $what_pos != 0;
   }

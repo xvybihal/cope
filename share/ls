@@ -2,6 +2,19 @@
 use App::Cope;
 use App::Cope::Extra qw[user %permissions %filetypes];
 
+use constant {
+	SEC   => 0,
+	MIN   => 1,
+	HOUR  => 2,
+	MDAY  => 3,
+	MON   => 4,
+	YEAR  => 5,
+	WDAY  => 6,
+	YDAY  => 7,
+	ISDST => 8,
+};
+my @now = localtime(time);
+
 # Regex for ISO date formats, such as 03-23 18:07
 my $iso_re = qr{
 		 (?:\d{4}-)?     # year
@@ -24,11 +37,159 @@ sub size {
   if ( /^-/ ) {
     return 'blue bold';
   } else {
-    return 'blue bold';
+    return 'blue';
   }
 }
 
-my $highlighting = 0;
+my %extensions = (
+	'cmd' => 'green bold',
+	'exe' => 'green bold',
+	'com' => 'green bold',
+	'btm' => 'green bold',
+	'bat' => 'green bold',
+	'sh' => 'green bold',
+	'csh' => 'green bold',
+	# archives or compressed (bright red)
+	'tar' => 'red bold',
+	'tgz' => 'red bold',
+	'arj' => 'red bold',
+	'taz' => 'red bold',
+	'lzh' => 'red bold',
+	'zip' => 'red bold',
+	'rar' => 'red bold',
+	'z' => 'red bold',
+	'Z' => 'red bold',
+	'gz' => 'red bold',
+	'bz2' => 'red bold',
+	'bz' => 'red bold',
+	'tz' => 'red bold',
+	'rpm' => 'red bold',
+	'deb' => 'red bold',
+	'cpio' => 'red bold',
+	# image formats
+	'jpg' => 'magenta bold',
+	'jpeg' => 'magenta bold',
+	'gif' => 'magenta bold',
+	'bmp' => 'magenta bold',
+	'xbm' => 'magenta bold',
+	'xpm' => 'magenta bold',
+	'png' => 'magenta bold',
+	'pdf' => 'magenta bold',
+	'tif' => 'magenta bold',
+	'tiff' => 'magenta bold',
+	# audio/video formats
+	'mpg' => 'magenta bold',
+	'mpeg' => 'magenta bold',
+	'mov' => 'magenta bold',
+	'avi' => 'magenta bold',
+	'wmv' => 'magenta bold',
+	'ogg' => 'magenta bold',
+	'mp3' => 'magenta bold',
+	'mpc' => 'magenta bold',
+	'wav' => 'magenta bold',
+	'au' => 'magenta bold',
+	# swap
+	'swp' => 'black bold',
+	'swo' => 'black bold',
+	# code
+	'pl' => 'cyan bold',
+	'c' => 'cyan bold',
+	'cc' => 'cyan bold',
+	'h' => 'cyan bold',
+	'patch' => 'cyan bold',
+	# rc and config files - list explicitly since a pattern cannot be used
+	'muttrc' => 'white bold',
+	'bashrc' => 'white bold',
+	'htoprc' => 'white bold',
+	'inputrc' => 'white bold',
+	'multitailrc' => 'white bold',
+	'muttrc' => 'white bold',
+	'procmailrc' => 'white bold',
+	'psqlrc' => 'white bold',
+	'screenrc' => 'white bold',
+	'vimrc' => 'white bold',
+	'zshrc' => 'white bold',
+	'bash_history' => 'white bold',
+	'bashrc' => 'white bold',
+	'dir_colors' => 'white bold',
+	'grepmail-cache' => 'white bold',
+	'htoprc' => 'white bold',
+	'htpasswd' => 'white bold',
+	'inputrc' => 'white bold',
+	'less' => 'white bold',
+	'lesshst' => 'white bold',
+	'psql_history' => 'white bold',
+	'viminfo' => 'white bold',
+	'zcompdump' => 'white bold',
+	'zhistory' => 'white bold',
+	'zlogin' => 'white bold',
+	'zshenv' => 'white bold',
+	'zshhistory' => 'white bold',
+	'zshprompt' => 'white bold',
+	'rpmnew' => 'white bold',
+	'db' => 'white bold',
+	# other
+	'core' => 'yellow bold',
+	'gpg' => 'yellow bold'
+
+);
+
+sub year {
+	return &current_date(shift(), $now[YEAR] + 1900);
+}
+
+sub month {
+	return &current_date(shift(), $now[MON] + 1);
+}
+
+sub day {
+	return &current_date(shift(), $now[MDAY]);
+}
+
+sub minute {
+	return &current_date(shift(), $now[MIN]);
+}
+
+sub hour {
+	return &current_date(shift(), $now[HOUR]);
+}
+
+sub current_date {
+	my $arg   = shift;
+	my $match = shift;
+	$arg =~ s/\D//g;
+	if ($arg == $match) {
+		return 'green bold'
+	}
+	else {
+		return 'green';
+	}
+}
+
+sub file {
+	# dirs
+	if (/\/$/) {
+		return 'blue bold';
+	}
+	# executable
+	if (/\*$/) {
+		return 'green bold';
+	}
+	# link
+	if (/ -> /) {
+		return 'cyan bold';
+	}
+	foreach my $ext (keys(%extensions)) {
+		if (/\b$ext$/) {
+			#print '= '.$ext.' - '.$extensions{$ext};
+			return $extensions{$ext};
+		}
+	}
+}
+
+# why not do it all the time?
+#my $highlighting = 0;
+my $highlighting = 1;
 
 sub process {
 
@@ -48,18 +209,20 @@ sub process {
     line qr{^
              ([-$ts])                    # filetype
              (.)(.)(.)(.)(.)(.)(.)(.)(.) # permissions (blahg)
-             [ .+@]? \s+                 # SELinux/MacOS ext perm. indicator
+             [ .+]? \s+                  # SELinux indicator
              (\d+) \s+                   # hard links
              (\S+) \s*                   # owner
              (\S*) \s+                   # group
              (?:
                (\d+,) \s+ (\d+) |        # device files
                ([0-9,.]+) ([BKMGTP]?)    # ordinary files
-             )
+             ) \s+
+			(\d{4}-)(\d{2}-)(\d{2})\s+(\d{2}:)(\d{2})(:\d{2})([+\-]\d+)
+			(.*)
          }x => \%filetypes, ( \%permissions ) x 9, 'red',
-           \&{ user 'yellow' }, 'yellow', 'magenta bold', 'magenta', \&size, 'blue';
+           \&{ user 'yellow' }, 'yellow', 'magenta bold', 'magenta', \&size, 'blue', \&year, \&month, \&day, \&hour, \&minute, 'black bold', 'black bold', \&file;
 
-    mark qr{$mdt_re|$iso_re} => 'green';
+#    mark qr{$mdt_re|$iso_re} => 'green';
   }
 }
 

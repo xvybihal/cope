@@ -1,6 +1,5 @@
 #!/usr/bin/env perl
 use App::Cope;
-$App::Cope::line_buffered = 0;
 
 my @headers = qw[Device Boot Start End Blocks Id System];
 
@@ -9,10 +8,14 @@ sub process {
     for my $h (@headers) { mark $h => 'underline'; }
   }
   else {
-    line qr{(?:^|:)(\S+/)(\S+)(?:\s+(\*))?} => 'blue', 'blue bold', 'green bold';
+    # device and size
+    line qr{^(Disk )(\S+?)(: )(\S+ GB)} => map { ( "underline", "underline $_" ) } 'yellow bold', 'green bold';
 
-    line qr{^(Disk )(\S+?)(: )(\S+ GB)} =>
-      map { ( "underline", "underline $_" ) } 'yellow bold', 'yellow';
+    # label type
+    line qr{(Disk label type:) (dos)?(gpt)?} => 'bold', 'red bold', 'magenta bold';
+
+    # paritions
+    line qr{(?:^|:)(\S\S+/)(\S\S+)(?:\s+(\*))?} => 'blue', 'blue bold', 'green bold';
   }
 }
 

@@ -3,7 +3,7 @@ use App::Cope;
 
 sub process {
   line qr{^((?:....:)?..:..\..)\s([^:]+:|"[^"]+")} => 'cyan', 'cyan bold';
-  mark qr{\(rev \d+\)} => 'black bold';
+  mark qr{\(rev \w+\)} => 'black bold';
 }
 
 run( \&process, real_path, @ARGV );
