@@ -27,9 +27,11 @@ $ sudo make install
 
 Then, find out where perl put the scripts:
 
-$ perl cope_path.pl
+$ cope_path.pl
 
-And add that to your $PATH.
+And add that to your $PATH with something like in your ~/.bashrc:
+
+PATH=$(cope_path.pl):$PATH
 
 ---
 
