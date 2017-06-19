@@ -23,6 +23,7 @@ Requires:       perl(IO::Stty)
 Requires:       perl(List::MoreUtils)
 Requires:       perl(Regexp::Common)
 Requires:       perl(Regexp::IPv6)
+Requires:       perl(Number::Format)
 Requires:       perl(:MODULE_COMPAT_%(eval "`%{__perl} -V:version`"; echo $version))
 
 %description

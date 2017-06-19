@@ -1,15 +1,76 @@
 #!/usr/bin/env perl
 use App::Cope;
+use App::Cope::Extra qw[percent_b];
+use Number::Format qw|:subs|;
+use Term::ANSIColor;
 
+use constant {
+	SEC   => 0,
+	MIN   => 1,
+	HOUR  => 2,
+	MDAY  => 3,
+	MON   => 4,
+	YEAR  => 5,
+	WDAY  => 6,
+	YDAY  => 7,
+	ISDST => 8,
+};
+my @now = localtime(time);
+
+sub year {
+	return &current_date(shift(), $now[YEAR] + 1900);
+}
+
+sub month {
+	return &current_date(shift(), $now[MON] + 1);
+}
+
+sub day {
+	return &current_date(shift(), $now[MDAY]);
+}
+
+sub minute {
+	return &current_date(shift(), $now[MIN]);
+}
+
+sub hour {
+	return &current_date(shift(), $now[HOUR]);
+}
+
+sub current_date {
+	my $arg   = shift;
+	my $match = shift;
+	$arg =~ s/\D//g;
+	if ($arg == $match) {
+		return 'green bold'
+	}
+	else {
+		return 'green';
+	}
+}
+
+sub size {
+  return 'blue bold';
+}
+
+my $i = 0;
 sub process {
-	# TODO: fix?
-        line qr{(\d+)[\s|K|M|G]} => 'cyan';
-        line qr{(\d+\.\d+)[\s|K|M|G]} => 'cyan';
+	if ($i == 0) {
+		print color 'yellow bold underline';
+		if (m{^[ \d,]+\t}) {
+			print "GGG,MMM,KKK,BBB\t";
+		}
+		if (/\t(\d{4}-)(\d{2}-)(\d{2}) (\d{2}:)(\d{2})\t/) {
+			printf("%-16s\t", 'Last Modified');
+		}
+		printf("%-40s\n", 'File');
+		print color 'reset';
+		$i++;
+	}
 
-	line qr{\d(K)\s} => 'green';
-	line qr{\d(M)\s} => 'yellow';
-	line qr{\d(G)\s} => 'red';
-	line qr{\d(T)\s} => 'red bold';
+	s/^(\d+)/sprintf("%15s", &format_number($1))/e;
+	line qr{^([ \d,]+)\t} => \&size;
+	line qr{\t(\d{4}-)(\d{2}-)(\d{2}) (\d{2}:)(\d{2})\t} => \&year, \&month, \&day, \&hour, \&minute;
 }
 
 run( \&process, real_path, @ARGV );
