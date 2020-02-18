@@ -22,7 +22,7 @@ requires 'Regexp::IPv6';
 test_requires 'Test::More';
 
 # install the scripts
-install_share 'scripts';
+install_share 'share';
 
 # go go go!
 auto_install;
