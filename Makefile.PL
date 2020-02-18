@@ -23,6 +23,7 @@ test_requires 'Test::More';
 
 # install the scripts
 install_share 'share';
+install_script 'bin/cope_path.pl';
 
 # go go go!
 auto_install;
