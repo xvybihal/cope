@@ -1,7 +1,7 @@
 use inc::Module::Install;
 
 # metadata
-name 'Cope';
+name 'App-Cope';
 all_from 'lib/App/Cope.pm';
 
 # use 5.10 for given/when construct
