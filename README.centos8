@@ -25,7 +25,7 @@ rpm -Uvh perl-Regexp-IPv6-0.03-11.el8.noarch.rpm
 ```
 
 ```
-yum config-manager --set-enabled PowerTools && dnf update -y
+yum config-manager --set-enabled powertools && dnf update -y
 ```
 
 You probably want `epel` enabled too.
