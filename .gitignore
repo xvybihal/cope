@@ -6,3 +6,4 @@ META.yml
 MYMETA.json
 MYMETA.yml
 inc/
+*.rpm

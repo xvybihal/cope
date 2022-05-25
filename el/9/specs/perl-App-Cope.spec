@@ -2,10 +2,12 @@ Name:           perl-App-Cope
 Version:        1.1
 Release:        1%{?dist}
 Summary:        App::Cope Perl module
-License:        N/A
+License:        Non-distributable, see LICENSE
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/App-Cope/
-Source0:        http://www.cpan.org/modules/by-module/App/App-Cope-%{version}.tar.gz
+# fetch the source, pretty please
+%undefine       _disable_source_fetch
+Source0:        https://github.com/xvybihal/cope/releases/download/v1.1-rc2/App-Cope-%{version}.tar.gz
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:      noarch
 BuildRequires:  perl(Env::Path)
@@ -62,9 +64,6 @@ rm -rf $RPM_BUILD_ROOT
 %{_usr}/bin/*
 
 %changelog
-* Tue Feb 18 2020 Josef Vybíhal <josef.vybihal@gmail.com> 1.1-1
-- I have no idea what I am doing
-
 * Mon Jun 19 2017 Rick Hansen <nichivo@goemail.xyz> 1.00-1
 - Milestone release
 
