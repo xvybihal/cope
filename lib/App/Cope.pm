@@ -27,6 +27,7 @@ use Term::ANSIColor;
 use List::MoreUtils qw[each_array firstidx];
 use Env::Path qw[:all];
 use File::Spec;
+use feature ();
 
 use base q[Exporter];
 our @EXPORT = qw[run mark line real_path];
