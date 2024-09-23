@@ -1,8 +1,8 @@
 Name:           perl-App-Cope
-Version:        1.00
+Version:        1.1
 Release:        1%{?dist}
 Summary:        App::Cope Perl module
-License:        Non-distributable, see LICENSE
+License:        N/A
 Group:          Development/Libraries
 URL:            http://search.cpan.org/dist/App-Cope/
 Source0:        http://www.cpan.org/modules/by-module/App/App-Cope-%{version}.tar.gz
@@ -56,12 +56,15 @@ rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(-,root,root,-)
-%doc LICENSE README
+%doc README
 %{perl_vendorlib}/*
 %{_mandir}/man3/*
 %{_usr}/bin/*
 
 %changelog
+* Tue Feb 18 2020 Josef Vybíhal <josef.vybihal@gmail.com> 1.1-1
+- I have no idea what I am doing
+
 * Mon Jun 19 2017 Rick Hansen <nichivo@goemail.xyz> 1.00-1
 - Milestone release
 

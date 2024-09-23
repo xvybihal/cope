@@ -1,0 +1,44 @@
+# Install rpm in CentOS 8
+
+## Prereqs
+
+You need at least these installed:
+```
+	perl(Env::Path) is needed by perl-App-Cope-1.1-1.el8.noarch
+	perl(File::ShareDir) is needed by perl-App-Cope-1.1-1.el8.noarch
+	perl(IO::Pty) is needed by perl-App-Cope-1.1-1.el8.noarch
+	perl(IO::Stty) is needed by perl-App-Cope-1.1-1.el8.noarch
+	perl(List::MoreUtils) is needed by perl-App-Cope-1.1-1.el8.noarch
+	perl(Number::Format) is needed by perl-App-Cope-1.1-1.el8.noarch
+	perl(Regexp::Common) is needed by perl-App-Cope-1.1-1.el8.noarch
+	perl(Regexp::IPv6) is needed by perl-App-Cope-1.1-1.el8.noarch
+```
+
+You can try to install all of them via CPAN or endlessly google for their (s)rpms. Not all of them are in repos. I have been there, done that, and it sucks. So here is an easier way:
+
+I have build these, attached into release assets:
+```
+rpm -Uvh perl-Env-Path-0.19-1.el8.noarch.rpm
+rpm -Uvh perl-IO-Stty-0.03-10.el8.noarch.rpm
+rpm -Uvh perl-Number-Format-1.73-14.el8.noarch.rpm
+rpm -Uvh perl-Regexp-IPv6-0.03-11.el8.noarch.rpm
+```
+
+```
+yum config-manager --set-enabled powertools && dnf update -y
+```
+
+You probably want `epel` enabled too.
+
+```
+dnf install perl-File-ShareDir perl-IO-Tty perl-List-MoreUtils perl-Regexp-Common -y
+```
+
+```
+rpm -Uvh perl-App-Cope-1.1-1.el8.noarch.rpm
+```
+
+And have `PATH=$(cope_path.pl):$PATH` in your .bashrc, .bash_profile, or whatever :)
+
+
+The src.rpm is also available.
